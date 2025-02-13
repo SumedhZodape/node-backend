@@ -89,6 +89,49 @@ let server = http.createServer((req, res)=>{
         }
 
     }
+    else if(req.method === "POST" && parsedURL.path==="/addnewuser"){
+
+
+        let data = "";
+
+        req.on("data", (chunk)=>{
+
+            data += chunk;
+
+        })
+
+        req.on("end", ()=>{
+
+
+            let userData = [];
+            
+            let fileData = fs.readFileSync('./users.json', 'utf-8')
+
+            if(fileData){
+                userData = JSON.parse(fileData)
+            }
+
+            let id = 1;
+
+            if(userData.length > 0){
+                let lastEle = userData[userData.length - 1]
+                
+                id = Number(lastEle.id) + 1;
+            }
+
+
+            userData.push({id: id, ...JSON.parse(data)})
+
+
+            fs.writeFileSync('users.json', JSON.stringify(userData))
+            res.write(JSON.stringify({
+                message:"User Added Successfully",
+                success: true
+            }))
+            res.end()
+        })
+
+    }
     else{
         res.write(JSON.stringify({
             message:"Server Error",
