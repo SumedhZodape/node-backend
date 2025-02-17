@@ -9,7 +9,7 @@ let server = http.createServer((req, res)=>{
 
     const parsedURL = url.parse(req.url, true);
 
-    // console.log(parsedURL)
+    console.log(parsedURL)
     // console.log(parsedURL.query)
 
 
@@ -129,6 +129,48 @@ let server = http.createServer((req, res)=>{
                 success: true
             }))
             res.end()
+        })
+
+    }
+    else if(req.method === "PUT" && parsedURL.pathname === "/updateuser"){
+        const userID = parsedURL.query.id;
+
+        let userBodyData = "";
+        
+        req.on("data", (chunk)=>{
+            userBodyData += chunk;
+        })
+
+
+        req.on("end", ()=>{
+
+
+            let fileData = JSON.parse(fs.readFileSync('users.json', 'utf-8'));
+
+            let userIndex = fileData.findIndex((ele)=>{
+                return Number(ele.id) === Number(userID)
+            })
+
+            if(userIndex !== -1){
+                fileData[userIndex] = JSON.parse(userBodyData);
+                fs.writeFileSync('users.json', JSON.stringify(fileData))
+
+                res.write(JSON.stringify({
+                    message:"User updated successfully.",
+                    success: true
+                }))
+
+                res.end();
+
+            }else{
+                res.write(JSON.stringify({
+                    message:"User not found.",
+                    success: false
+                }))
+                res.end();
+            }
+
+
         })
 
     }
