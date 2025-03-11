@@ -7,14 +7,18 @@ let server = http.createServer((req, res)=>{
     // console.log(req.method)
     // console.log(req.url)
 
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
     const parsedURL = url.parse(req.url, true);
 
-    console.log(parsedURL)
-    // console.log(parsedURL.query)
 
-
-
-    if(req.method === "GET" && parsedURL.path ==="/getusers"){
+    if(req.method === "OPTIONS"){
+       res.writeHead(200);
+       return res.end();
+    }
+    else if(req.method === "GET" && parsedURL.path ==="/getusers"){
 
 
         // to get all the users
