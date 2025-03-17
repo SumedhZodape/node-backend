@@ -57,13 +57,14 @@
         <div class="modal-content">
             <i class="fa-solid fa-circle-xmark cross" onclick="openCloseModal('updatemodal')"></i>
 
-            <h1>Update New User</h1>
+            <h1>Update User</h1>
 
             <div class="addForm">
-                <input type="text" placeholder="Enter Name">
-                <input type="number" placeholder="Age">
-                <input type="text" placeholder="Enter City">
-                <button>Update</button>
+                <input type="text" id="updateId" hidden>
+                <input type="text" placeholder="Enter Name" id="updateName">
+                <input type="number" placeholder="Age" id="updateAge">
+                <input type="text" placeholder="Enter City" id="updateCity">
+                <button onclick="updateUser()">Update</button>
             </div>
 
         </div>

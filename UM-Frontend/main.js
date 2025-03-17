@@ -27,7 +27,8 @@ const setTable = (users) =>{
         let updateI = document.createElement("i");
         updateI.setAttribute("class", "fa-solid fa-pen-to-square")
         updateI.onclick = ()=>{
-            openCloseModal('updatemodal')
+            openCloseModal('updatemodal');
+            setUpdateUser(user)
         }
         actionTD.appendChild(updateI)
 
@@ -98,7 +99,8 @@ async function addNewUser(){
     console.log(response)
 
     if(response.success === true){
-        openCloseModal('addmodal')
+        openCloseModal('addmodal');
+        getAllUsers()
     }
 
 }
@@ -142,5 +144,56 @@ const deleteUser = async(userID) =>{
         if(response.success === true){
             getAllUsers()
         }
+    }
+}
+
+
+
+
+/// update user
+
+const setUpdateUser = (user) =>{
+
+    document.getElementById('updateId').value = user.id;
+    document.getElementById('updateName').value = user.name;
+    document.getElementById('updateAge').value = user.age;
+    document.getElementById('updateCity').value = user.city;
+
+    
+}
+
+
+const updateUser = async() =>{
+    let id = Number(document.getElementById("updateId").value);
+    let name = document.getElementById('updateName').value;
+    let age = Number(document.getElementById('updateAge').value);
+    let city = document.getElementById('updateCity').value;
+
+    let userObj = {
+        id: id,
+        name: name,
+        age: age,
+        city: city
+    }
+
+    if(!userObj.name || !userObj.age || !userObj.city){
+        alert("All fields are required!");
+        return
+    }
+
+    let res = await fetch(`http://localhost:8000/updateuser?id=${userObj.id}`,{
+        method:"PUT",
+        headers: {
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify(userObj)
+    })
+
+
+    let response = await res.json();
+
+    if(response.success === true){
+        getAllUsers();
+        openCloseModal('updatemodal')
     }
 }
